@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 
 import axios from "../../Api/axiosconfig";
-import { loaduser } from "../reducers/UserSlice";
+import { loaduser , removeuser} from "../reducers/UserSlice";
 
 export const asyncCurrentUser = (user) => async (dispatch, getState) => {
   try {
-    const user = JSON.parse(localStorage.getItem("User"));
+    const user = JSON.parse(localStorage.getItem("user"));
     if (user) dispatch(loaduser(user));
     else console.log("User not found");
   } catch (error) {
@@ -15,7 +15,9 @@ export const asyncCurrentUser = (user) => async (dispatch, getState) => {
 
 export const asyncuserlogout = (user) => async (dispatch, getState) => {
   try {
-    localStorage.removeItem("User", null);
+    // localStorage.clear();
+    localStorage.removeItem("user");
+    dispatch(removeuser())
   } catch (error) {
     console.log(error);
   }
@@ -28,7 +30,7 @@ export const asyncuserlogin = (user) => async (dispatch, getState) => {
       user
     );
     console.log(data[0]);
-    localStorage.setItem("User", JSON.stringify(data[0]));
+    localStorage.setItem("user", JSON.stringify(data[0]));
   } catch (error) {
     console.log(error);
   }

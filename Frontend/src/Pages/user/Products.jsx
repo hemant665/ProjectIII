@@ -11,22 +11,30 @@ const Products = () => {
         key={data.id}
       >
         <div className="flex flex-nowrap flex-col p-1">
-          <img className=" object-cover " src={data.image} alt="" />
-          <h1 className="mt-3 text-3xl font-light">{data.title.slice(0,17)}...</h1>
+          <img className=" object-cover  " src={data.image} alt="" />
+          <h1 className="mt-3 text-3xl font-light">
+            {data.title.slice(0, 16)}...
+          </h1>
           <p className="text-xs">{data.category}</p>
-          <small className="mt-5">{data.description.slice(0,80)}  ....More</small>
+          <small className="mt-5">
+            {data.description.slice(0, 80)} ....More
+          </small>
           <div className="flex justify-around mt-3">
             <p>{data.price}</p>
             <button className="p-1 border rounded">Add to Cart</button>
           </div>
-          <Link to={`/product/${data.id}`} className="text-center mt-4">More Info</Link>
+          <Link to={`/product/${data.id}`} className="text-center mt-4">
+            More Info
+          </Link>
         </div>
       </div>
     );
   });
 
   return product.length > 0 ? (
-    <div className="flex items-center">{renderAllProduct}</div>
+    <div className="flex gap-4 justify-center items-center">
+      {renderAllProduct}
+    </div>
   ) : (
     "Product Add Soon...."
   );

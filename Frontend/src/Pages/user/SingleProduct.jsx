@@ -15,10 +15,6 @@ const SingleProduct = () => {
   const product = products?.find((product) => product.id == id);
   console.log(product, users);
 
-  const user = useSelector((state) => state.users);
-  console.log("user :" ,user)
-
-
   const { register, handleSubmit } = useForm({
     defaultValues: {
       title: product?.title,
@@ -64,7 +60,7 @@ const SingleProduct = () => {
 
       <hr className="mt-5 mb-10" />
 
-      {user.isAdmin ? (
+      {users && users.isAdmin && (
         <form
           onSubmit={handleSubmit(UpdateProductHandler)}
           className="flex flex-col gap-4 w-1/2"
@@ -103,8 +99,6 @@ const SingleProduct = () => {
             Update Product
           </button>
         </form>
-      ) : (
-        ""
       )}
     </div>
   ) : (
