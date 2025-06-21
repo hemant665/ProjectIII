@@ -2,28 +2,18 @@ import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { asyncuserlogin } from "../../Store/action/UserAction";
-import { useEffect, useState } from "react";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const SubmitHandler = (user) => {
     dispatch(asyncuserlogin(user));
-    setIsLoggedIn(true); 
     navigate("/")
   };
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      setTimeout(() => {
-        window.location.reload(); 
-      }, 100);
-    }
-  }, [isLoggedIn]);
 
   return (
     <form onSubmit={handleSubmit(SubmitHandler)} className="flex flex-col gap-4 w-1/2">

@@ -17,7 +17,7 @@ const App = () => {
   
   
   return (
-    <div className="bg-zinc-700 h-screen w-full text-white px-[10%] overflow-auto">
+    <div className="bg-zinc-700 h-screen w-full text-white px-[10%] overflow-auto ">
       <Nav />
 
       <div className="mt-10">

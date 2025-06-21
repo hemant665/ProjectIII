@@ -5,15 +5,14 @@ import {
   asyncDeleteProduct,
   asyncUpdateProduct,
 } from "../../Store/action/ProductAction";
-
+import { asyncUpdateUser } from "../../Store/action/UserAction";
+import { ToastContainer, toast } from 'react-toastify';
 const SingleProduct = () => {
   const { id } = useParams();
-  const {
-    products: { products },
-    users: { users },
-  } = useSelector((state) => state);
+  const notify = () => toast.success("Product is Added To Cart");
+  const { products } = useSelector((state) => state?.products);
+  const { users } = useSelector((state) => state?.users);
   const product = products?.find((product) => product.id == id);
-  console.log(product, users);
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -33,6 +32,25 @@ const SingleProduct = () => {
     navigator("/products");
   };
 
+  const AddToCartHandler = (product) => {
+    const copyuser = { ...users, cart: [...users.cart] };
+    notify();
+    const cartData = copyuser.cart.findIndex(
+      (c) => c?.product?.id == product?.id
+    );
+
+    if (cartData == "-1") {
+      copyuser.cart.push({ product, quantity: 1 });
+    } else {
+      copyuser.cart[cartData] = {
+        product,
+        quantity: copyuser.cart[cartData].quantity + 1,
+      };
+    }
+
+    dispatch(asyncUpdateUser(copyuser.id, copyuser));
+  };
+
   const DeleteHandler = () => {
     dispatch(asyncDeleteProduct(id));
     navigator("/products");
@@ -40,27 +58,39 @@ const SingleProduct = () => {
 
   return product ? (
     <div className="w-full flex flex-col gap-5">
-      <div className=" flex">
-        <div className="">
-          <img className="w-[80%]" src={product.image} alt="" />
+      <div className="flex ">
+        <div className="w-1/2">
+          <img className="h-[310px]" src={product.image} alt="" />
         </div>
-        <div className="flex flex-col gap-3 text-xl">
+        <div className="flex flex-col gap-3 text-xl w-1/2">
           <h1 className="text-4xl">{product.title}</h1>
-          <p>{product.category}</p>
           <p>${product.price}</p>
-          <p>{product.description}</p>
-          <button
-            onClick={DeleteHandler}
-            className="bg-red-700 p-2 rounded mt-25 cursor-pointer"
-          >
-            Delete Product
-          </button>
+          <p className="mt-10 text-sm">{product.description}</p>
+          <div className="flex justify-between">
+            {users && (
+              <button
+                className="bg-blue-700 p-2 rounded mt-15 cursor-pointer"
+                onClick={() => AddToCartHandler(product)}
+              >
+                Add to Cart
+              </button>
+            )}
+            {users?.isAdmin && (
+              <button
+                onClick={DeleteHandler}
+                className="bg-red-700 p-2 rounded mt-15 cursor-pointer"
+              >
+                Delete Product
+              </button>
+            )}
+          </div>
         </div>
+        <ToastContainer/>
       </div>
 
       <hr className="mt-5 mb-10" />
 
-      {users && users.isAdmin && (
+      {users && users?.isAdmin && (
         <form
           onSubmit={handleSubmit(UpdateProductHandler)}
           className="flex flex-col gap-4 w-1/2"
